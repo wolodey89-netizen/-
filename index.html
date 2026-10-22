@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Олимпиада по биологии 2026 — ГБПОУ РО «РАДК»</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #1e3a5f;
+        }
+        .header-college {
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        .header-abbr {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #2c4f7a;
+        }
+        button.danger {
+            background: #b00020;
+        }
+        button.danger:hover {
+            background: #d00030;
+        }
+        .question {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options label {
+            display: block;
+            font-weight: normal;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .options input[type="radio"] {
+            margin-right: 8px;
+        }
+        .timer {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #1e3a5f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+        .warning-box ul {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+        .warning-box li {
+            margin-bottom: 5px;
+        }
+        .penalty-info {
+            color: #b00020;
+            font-weight: bold;
+        }
+        #certificate-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #certificate-canvas {
+            max-width: 100%;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            font-weight: normal;
+            cursor: pointer;
+            gap: 10px;
+        }
+        .checkbox-label input {
+            margin-top: 3px;
+            transform: scale(1.2);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #1e3a5f;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+
+    <!-- ============ СТАРТОВЫЙ ЭКРАН ============ -->
+    <div id="start-screen">
+        <div class="header-college">
+            Государственное бюджетное профессиональное образовательное учреждение<br>
+            Ростовской области «Ростовский-на-Дону автодорожный колледж»
+        </div>
+        <div class="header-abbr">ГБПОУ РО «РАДК»</div>
+
+        <h1>Олимпиада по биологии 2026</h1>
+
+        <div class="warning-box">
+            <strong>⚠️ Внимание! Правила прохождения теста:</strong>
+            <ul>
+                <li>Страница может фиксировать некоторые случаи переключения вкладок или потери фокуса браузера; возможны ложные срабатывания.</li>
+                <li><strong>За каждое зафиксированное событие вычитается 10 процентных пунктов.</strong></li>
+                <li>При 3 событиях тест не завершается автоматически; штраф составит 30 процентных пунктов.</li>
+                <li>Максимальный штраф — 50 процентных пунктов. Это не является надёжной системой прокторинга.</li>
+                <li>Время на выполнение: 45 минут.</li>
+            </ul>
+        </div>
+
+        <p style="font-size:13px;color:#555;">После завершения теста результат будет отправлен организатору, если олимпиада подключена к серверу сбора результатов.</p>
+
+        <div class="form-group">
+            <label>Фамилия, имя, отчество</label>
+            <input type="text" id="fullname" placeholder="Иванов Иван Иванович">
+        </div>
+        <div class="form-group">
+            <label>Курс</label>
+            <input type="text" id="course" placeholder="1">
+        </div>
+        <div class="form-group">
+            <label>Группа</label>
+            <input type="text" id="group" placeholder="АТ-1">
+        </div>
+
+        <div class="form-group">
+            <label class="checkbox-label">
+                <input type="checkbox" id="agree-rules">
+                Я ознакомлен(а) с правилами и понимаю, что переключение окон снижает мой итоговый балл.
+            </label>
+        </div>
+
+        <button onclick="startTest()">Начать тестирование</button>
+    </div>
+
+    <!-- ============ ЭКРАН ТЕСТА ============ -->
+    <div id="test-screen" style="display:none;">
+        <div class="timer" id="timer">45:00</div>
+        <h2>Вопросы</h2>
+        <div id="questions-container"></div>
+        <button onclick="endTest(false)" style="width:100%;">Завершить тест</button>
+    </div>
+
+    <!-- ============ ЭКРАН РЕЗУЛЬТАТА ============ -->
+    <div id="result-screen" style="display:none;">
+        <h2>Результаты</h2>
+        <div id="result-details"></div>
+        <div id="certificate-container" style="display:none;">
+            <canvas id="certificate-canvas" width="800" height="600"></canvas>
+            <br>
+            <button onclick="downloadCertificate()">📥 Скачать сертификат</button>
+        </div>
+        <button onclick="location.reload()" style="margin-top:20px;">Пройти заново</button>
+    </div>
+
+    <!-- ============ ПАНЕЛЬ ОРГАНИЗАТОРА ============ -->
+    <div id="admin-screen" style="display:none;">
+        <h2>📊 Панель организатора</h2>
+        <p id="admin-stats"></p>
+        <button onclick="exportCSV()">📥 Скачать CSV со всеми результатами</button>
+        <button class="danger" onclick="clearResults()">🗑 Очистить все данные</button>
+        <button onclick="location.href='?'" style="float:right;">← На главную</button>
+        <div id="admin-table"></div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // КОНФИГУРАЦИЯ — НАСТРОЙТЕ ЗДЕСЬ
+    // ============================================================
+    const CONFIG = {
+        // Вставьте сюда URL опубликованного Google Apps Script Web App.
+        // Пример: https://script.google.com/macros/s/ВАШ_ID/exec
+        GOOGLE_SCRIPT_URL: '',
+        // Проходной балл для сертификата
+        PASS_PERCENT: 70,
+        // Ключ для хранения в localStorage
+        STORAGE_KEY: 'biology_olympiad_2026_results'
+    };
+
+    // ============================================================
+    // ДАННЫЕ ВОПРОСОВ (проверены по ключу)
+    // ============================================================
+    const questionsData = [
+        { id: 1, text: "Какой учёный дал первое относительно подробное описание строения человека и животных?", options: ["Аристотель", "Гиппократ", "Гален", "Карл Линней"], correct: "Б" },
+        { id: 2, text: "Какой уровень самый низший в организации живой природы?", options: ["Организменный", "Клеточный", "Молекулярный", "Биосферный"], correct: "В" },
+        { id: 3, text: "Сколько процентов кислорода приходится на массу живой клетки?", options: ["75%", "15%", "8%", "3%"], correct: "А" },
+        { id: 4, text: "Рибосомы участвуют в синтезе:", options: ["Липидов", "Белков", "АТФ", "Углеводов"], correct: "Б" },
+        { id: 5, text: "Утрата белковой молекулой своей природной структуры называется?", options: ["Ренатурация", "Денатурация", "Раскручивание", "Скручивание"], correct: "Б" },
+        { id: 6, text: "Какое число хромосом у человека?", options: ["25", "46", "48", "43"], correct: "Б" },
+        { id: 7, text: "Хромосомы, содержащие аллельные гены:", options: ["Непарные", "гомологичные", "негомологичные", "Соматические"], correct: "Б" },
+        { id: 8, text: "Автотрофные организмы получают энергию:", options: ["из готовых органических веществ", "поглощая воду", "за счет синтеза органических веществ из неорганических", "за счет распада неорганических веществ."], correct: "В" },
+        { id: 9, text: "Углеводы, входящие в состав клеточной мембраны:", options: ["фото синтезируют", "Транспорт веществ", "Образуют мембрану", "распознавание соседних родственных клеток"], correct: "Г" },
+        { id: 10, text: "При каком клеточном делении количество хромосом не уменьшается?", options: ["мейоз", "митоз и мейоз", "амитоз и мейоз", "митоз"], correct: "Г" },
+        { id: 11, text: "Первая фаза митоза:", options: ["профаза", "интерфаза", "Анафаза", "Телофаза"], correct: "А" },
+        { id: 12, text: "Оплодотворенная яйцеклетка называется:", options: ["бластула", "зигота", "гамета", "гаструла"], correct: "Б" },
+        { id: 13, text: "Нервная система и органы чувств образуются во время органогенеза:", options: ["из гаструлы", "из энтодермы", "из эктодермы", "из мезодермы"], correct: "В" },
+        { id: 14, text: "Кто считается создателем современной генетики?", options: ["Гиппократ", "Грегор Мендель", "Гуго де Фриз", "Эрих Чермак"], correct: "Б" },
+        { id: 15, text: "На каких растениях Г. Мендель ставил опыты?", options: ["Укроп", "Горох", "Кукуруза", "картофель"], correct: "Б" },
+        { id: 16, text: "Благодаря этому ученому микробиологию выделили как самостоятельную науку:", options: ["Карл Бэр", "Луи Пастер", "Аристотель", "Жан Батист Ламарк"], correct: "Б" },
+        { id: 17, text: "Какой метод исследований помогает осмыслить полученные факты, сопоставить их с ранее известными результатами?", options: ["исторический", "экспериментальный", "сравнительный", "описательный"], correct: "В" },
+        { id: 18, text: "Согласно одному из свойств живого, всем живым организмам свойственен единый химический состав. Какие элементы есть во всех живых организмах?", options: ["С, О, Р, Н", "Са, О, Н, N", "С, О, Н, N", "С, О, Са, N"], correct: "В" },
+        { id: 19, text: "Какой метод цитологии позволяет изучать динамику процессов, например, фаз митоза?", options: ["киносъемка", "радиоактивная метка", "ультрацентрифугирование", "световая микроскопия"], correct: "А" },
+        { id: 20, text: "Установите соответствие между уровнями организации живой материи и их примерами: 1) Молекулярный; 2) Клеточный; 3) Организменный; 4) Биосферный. Примеры: А) модель планеты с экосистемой; Б) тигрёнок; В) схема строения клетки; Г) молекулы.", options: ["А-2, Б-3, В-1, Г-4", "А-2, Б-4, В-1, Г-3", "А-4, Б-3, В-1, Г-2", "А-4, Б-3, В-2, Г-1"], correct: "Г" },
+        { id: 21, text: "От этого микроэлемента зависит состояние костной ткани, правильное формирование костей скелета; состояние и рост волос, ногтей и зубов. Вместе с кальцием и фосфором предотвращает развитие кариеса.", options: ["магний", "кремний", "медь", "фтор"], correct: "Г" },
+        { id: 22, text: "Как называются вещества, которые плохо или вовсе нерастворимы в воде?", options: ["агидридные", "гидрофобные", "гидрофильные", "антиводные"], correct: "Б" },
+        { id: 23, text: "Что такое стероиды?", options: ["углеводы", "белки", "нуклеиновые кислоты", "липиды"], correct: "Г" },
+        { id: 24, text: "Соедините название углевода с его классом: А) Глюкоза; Б) Сахароза; В) Целлюлоза. Классы: 1) Моносахариды; 2) Полисахариды; 3) Дисахариды.", options: ["А-2, Б-3, В-1", "А-2, Б-1, В-3", "А-1, Б-3, В-2", "А-1, Б-2, В-3"], correct: "В" },
+        { id: 25, text: "Как называется процесс утраты белком своей природной структуры?", options: ["денатурация", "ренатурация", "протеиновое разложение", "аструктуризация"], correct: "А" },
+        { id: 26, text: "Какой нуклеотид входит в состав РНК, но не входит в ДНК?", options: ["тимин", "урацил", "гуанин", "цитозин"], correct: "Б" },
+        { id: 27, text: "АТФ в клетке является поставщиком:", options: ["воды", "азота", "энергии", "углекислого газа"], correct: "В" },
+        { id: 28, text: "Соедините название органоида клетки с его описанием: А) Митохондрия; Б) Рибосома; В) Лизосома; Г) Хлоропласт. Описания: 1) Органоид фотосинтеза; 2) Маленький мембранный пузырек, способный расщеплять белки, углеводы, липиды, нуклеиновые кислоты; 3) Органоид, необходимый клетке для синтеза белка; 4) Органоид, участвующий в процессе дыхания клетки.", options: ["А-2, Б-3, В-1, Г-4", "А-2, Б-4, В-1, Г-3", "А-4, Б-3, В-1, Г-2", "А-4, Б-3, В-2, Г-1"], correct: "Г" },
+        { id: 29, text: "Эукариотические организмы, запасным питательным веществом которых является гликоген, не содержат клеточной стенки, имеют центриоли. Клетки каких организмов можно описать таким образом?", options: ["животных", "грибов", "растений", "бактерий"], correct: "А" },
+        { id: 30, text: "Сколько выделяют направлений развития современной биологии? (Запишите ответ)", type: "text", correct: "три" }
+    ];
+
+    // ============================================================
+    // СОСТОЯНИЕ
+    // ============================================================
+    let testActive = false;
+    let violations = 0;
+    let lastViolationTime = 0;
+    let timerInterval = null;
+    let timeLeft = 45 * 60;
+    let userAnswers = {};
+    let shuffledQuestions = [];
+    let participant = { fullname: '', course: '', group: '' };
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function startTest() {
+        const fullname = document.getElementById('fullname').value.trim();
+        const course = document.getElementById('course').value.trim();
+        const group = document.getElementById('group').value.trim();
+        const agree = document.getElementById('agree-rules').checked;
+
+        if (!fullname || !course || !group) {
+            alert('Пожалуйста, заполните все поля.');
+            return;
+        }
+        if (!agree) {
+            alert('Пожалуйста, подтвердите, что вы ознакомлены с правилами.');
+            return;
+        }
+        participant = { fullname, course, group };
+
+        shuffledQuestions = questionsData.map(q => {
+            if (q.type === 'text') {
+                return { ...q, shuffledOptions: null };
+            }
+            const optionsWithCorrect = q.options.map((opt, idx) => {
+                const letter = ['А', 'Б', 'В', 'Г'][idx];
+                return { text: opt, isCorrect: letter === q.correct, originalLetter: letter };
+            });
+            shuffleArray(optionsWithCorrect);
+            return { ...q, shuffledOptions: optionsWithCorrect };
+        });
+        shuffleArray(shuffledQuestions);
+
+        testActive = true;
+        violations = 0;
+        lastViolationTime = 0;
+        userAnswers = {};
+        timeLeft = 45 * 60;
+
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('test-screen').style.display = 'block';
+        document.getElementById('result-screen').style.display = 'none';
+
+        renderQuestions();
+
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay();
+            if (timeLeft <= 0) {
+                endTest(true);
+            }
+        }, 1000);
+
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        window.addEventListener('blur', onWindowBlur);
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+        shuffledQuestions.forEach((q, index) => {
+            const div = document.createElement('div');
+            div.className = 'question';
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.textContent = `${index + 1}. ${q.text}`;
+            div.appendChild(qText);
+
+            if (q.type === 'text') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'Ваш ответ';
+                input.id = `q${q.id}_text`;
+                input.style.width = '100%';
+                input.style.padding = '8px';
+                input.style.border = '1px solid #ccc';
+                input.style.borderRadius = '4px';
+                input.addEventListener('input', (e) => {
+                    userAnswers[q.id] = e.target.value.trim();
+                });
+                div.appendChild(input);
+            } else {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                q.shuffledOptions.forEach((opt, optIdx) => {
+                    const label = document.createElement('label');
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `q${q.id}`;
+                    radio.value = optIdx;
+                    radio.addEventListener('change', (e) => {
+                        userAnswers[q.id] = parseInt(e.target.value);
+                    });
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(opt.text));
+                    optionsDiv.appendChild(label);
+                });
+                div.appendChild(optionsDiv);
+            }
+            container.appendChild(div);
+        });
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        if (timeLeft <= 300) {
+            document.getElementById('timer').style.background = '#b00020';
+        }
+    }
+
+    function onVisibilityChange() {
+        if (document.hidden && testActive) {
+            handleViolation();
+        }
+    }
+
+    function onWindowBlur() {
+        if (testActive) {
+            handleViolation();
+        }
+    }
+
+    function handleViolation() {
+        const now = Date.now();
+        if (now - lastViolationTime < 1500) return;
+        lastViolationTime = now;
+        violations++;
+
+        let penaltyText = '';
+        if (violations <= 5) {
+            penaltyText = `Ваш итоговый балл будет снижен на ${violations * 10}%.`;
+        } else {
+            penaltyText = `Ваш итоговый балл будет снижен на 50% (максимальный штраф).`;
+        }
+
+        alert(`⚠️ Нарушение ${violations}: Вы покинули страницу теста.\n${penaltyText}\n\nПожалуйста, не переключайте окна и вкладки.`);
+    }
+
+    function endTest(force) {
+        if (!testActive) return;
+        testActive = false;
+        clearInterval(timerInterval);
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+        window.removeEventListener('blur', onWindowBlur);
+
+        let correctCount = 0;
+        shuffledQuestions.forEach(q => {
+            const answer = userAnswers[q.id];
+            if (q.type === 'text') {
+                const normalizeAnswer = value => String(value || '')
+                    .toLowerCase()
+                    .trim()
+                    .replace(/ё/g, 'е')
+                    .replace(/[.!?]+$/g, '')
+                    .replace(/\s+/g, ' ');
+                const userText = normalizeAnswer(answer);
+                if (userText === normalizeAnswer(q.correct) || userText === '3') {
+                    correctCount++;
+                }
+            } else {
+                if (answer !== undefined) {
+                    const correctOption = q.shuffledOptions.find(opt => opt.isCorrect);
+                    const correctIndex = q.shuffledOptions.indexOf(correctOption);
+                    if (answer === correctIndex) {
+                        correctCount++;
+                    }
+                }
+            }
+        });
+
+        const total = shuffledQuestions.length;
+        const rawPercent = Math.round((correctCount / total) * 100);
+        const penaltyPercent = Math.min(violations * 10, 50);
+        const finalPercent = Math.max(0, rawPercent - penaltyPercent);
+        const certEligible = finalPercent >= CONFIG.PASS_PERCENT && !force;
+        const certificateId = 'RADK-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+
+        // Формируем запись результата для организатора
+        const resultRecord = {
+            timestamp: new Date().toISOString(),
+            fullname: participant.fullname,
+            course: participant.course,
+            group: participant.group,
+            correct: correctCount,
+            total: total,
+            rawPercent: rawPercent,
+            violations: violations,
+            penaltyPercent: penaltyPercent,
+            finalPercent: finalPercent,
+            certificateIssued: certEligible,
+            certificateId: certEligible ? certificateId : '',
+            timeSpentSeconds: 45 * 60 - timeLeft
+        };
+
+        // Сохраняем и отправляем организатору
+        submitResult(resultRecord);
+
+        document.getElementById('test-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+
+        const resultDiv = document.getElementById('result-details');
+        resultDiv.innerHTML = `
+            <p><strong>Участник:</strong> ${escapeHtml(participant.fullname)}</p>
+            <p><strong>Курс:</strong> ${escapeHtml(participant.course)}, <strong>Группа:</strong> ${escapeHtml(participant.group)}</p>
+            <p><strong>Правильных ответов:</strong> ${correctCount} из ${total}</p>
+            <p><strong>Балл без штрафа:</strong> ${rawPercent}%</p>
+            ${violations > 0 ? `<p class="penalty-info">Нарушений: ${violations}. Штраф: -${penaltyPercent}%</p>` : ''}
+            <p><strong>Итоговый балл:</strong> ${finalPercent}%</p>
+            ${certEligible ? `<p style="color:#2e7d32;"><strong>✓ Сертификат №${certificateId}</strong></p>` : ''}
+        `;
+
+        if (certEligible) {
+            document.getElementById('certificate-container').style.display = 'block';
+            drawCertificate(participant.fullname, finalPercent, certificateId);
+        } else {
+            document.getElementById('certificate-container').style.display = 'none';
+        }
+    }
+
+    // ============================================================
+    // ОТПРАВКА РЕЗУЛЬТАТА ОРГАНИЗАТОРУ
+    // ============================================================
+    async function submitResult(record) {
+        // Локальная копия — только на устройстве участника; не заменяет Google Sheets.
+        try {
+            const existing = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '[]');
+            existing.push(record);
+            localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(existing));
+        } catch (e) {
+            console.warn('localStorage недоступен:', e);
+        }
+
+        if (!CONFIG.GOOGLE_SCRIPT_URL) {
+            console.warn('Не настроен Google Apps Script URL. Результат не отправлен организатору.');
+            return;
+        }
+
+        try {
+            // no-cors позволяет отправить запись в Apps Script без предварительного CORS-запроса.
+            // Ответ браузер прочитать не сможет, поэтому успешная запись подтверждается в Google Sheets.
+            await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+                body: JSON.stringify(record)
+            });
+        } catch (e) {
+            console.error('Не удалось отправить результат в Google Sheets:', e);
+        }
+    }
+
+    // ============================================================
+    // СЕРТИФИКАТ
+    // ============================================================
+    function drawCertificate(name, percent, certId) {
+        const canvas = document.getElementById('certificate-canvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+
+        const gradient = ctx.createLinearGradient(0, 0, w, h);
+        gradient.addColorStop(0, '#f0f4f8');
+        gradient.addColorStop(1, '#d9e2ec');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = '#1e3a5f';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(20, 20, w - 40, h - 40);
+        ctx.strokeStyle = '#c9a227';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(35, 35, w - 70, h - 70);
+
+        ctx.textAlign = 'center';
+
+        ctx.fillStyle = '#1e3a5f';
+        ctx.font = 'bold 14px Arial';
+        ctx.fillText('Государственное бюджетное профессиональное образовательное учреждение', w / 2, 95);
+        ctx.fillText('Ростовской области «Ростовский-на-Дону автодорожный колледж»', w / 2, 113);
+        ctx.font = 'bold 16px Arial';
+        ctx.fillText('ГБПОУ РО «РАДК»', w / 2, 140);
+
+        ctx.fillStyle = '#c9a227';
+        ctx.font = 'bold 44px Arial';
+        ctx.fillText('СЕРТИФИКАТ УЧАСТНИКА', w / 2, 205);
+
+        ctx.fillStyle = '#333';
+        ctx.font = '18px Arial';
+        ctx.fillText('настоящим подтверждается, что', w / 2, 245);
+
+        ctx.fillStyle = '#1e3a5f';
+        let nameFontSize = 32;
+        ctx.font = `bold ${nameFontSize}px Arial`;
+        while (ctx.measureText(name).width > w - 100 && nameFontSize > 18) {
+            nameFontSize--;
+            ctx.font = `bold ${nameFontSize}px Arial`;
+        }
+        ctx.fillText(name, w / 2, 300, w - 100);
+
+        ctx.fillStyle = '#333';
+        ctx.font = '18px Arial';
+        ctx.fillText('успешно прошел(ла) олимпиаду по биологии 2026', w / 2, 350);
+        ctx.font = 'bold 20px Arial';
+        ctx.fillStyle = '#1e3a5f';
+        ctx.fillText('с результатом ' + percent + '%', w / 2, 385);
+
+        const date = new Date().toLocaleDateString('ru-RU');
+        ctx.font = '16px Arial';
+        ctx.fillStyle = '#555';
+        ctx.fillText('Дата выдачи: ' + date, w / 2, 440);
+
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(w / 2 - 100, 505);
+        ctx.lineTo(w / 2 + 100, 505);
+        ctx.stroke();
+        ctx.font = '13px Arial';
+        ctx.fillStyle = '#555';
+        ctx.fillText('Председатель предметно-цикловой комиссии', w / 2, 525);
+
+        ctx.font = '12px Arial';
+        ctx.fillStyle = '#888';
+        ctx.fillText('№ ' + certId, w / 2, 555);
+        ctx.fillText('г. Ростов-на-Дону · 2026', w / 2, h - 25);
+    }
+
+    function downloadCertificate() {
+        const canvas = document.getElementById('certificate-canvas');
+        const link = document.createElement('a');
+        const safeName = participant.fullname.replace(/\s+/g, '_');
+        link.download = `certificate_biology_2026_RADK_${safeName}.png`;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // ============================================================
+    // ПАНЕЛЬ ОРГАНИЗАТОРА (?admin=1)
+    // ============================================================
+    function showAdminPanel() {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('test-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'none';
+        document.getElementById('admin-screen').style.display = 'block';
+
+        const data = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '[]');
+        const stats = document.getElementById('admin-stats');
+        const passed = data.filter(d => d.certificateIssued).length;
+        stats.innerHTML = `<strong>Всего записей:</strong> ${data.length} · <strong>Сертификатов выдано:</strong> ${passed}`;
+
+        const container = document.getElementById('admin-table');
+        if (data.length === 0) {
+            container.innerHTML = '<p>Локальных записей на этом устройстве пока нет. Общие результаты организатор смотрит в подключённой Google-таблице.</p>';
+            return;
+        }
+
+        let html = '<table><thead><tr>' +
+            '<th>Дата</th><th>ФИО</th><th>Курс</th><th>Группа</th>' +
+            '<th>Прав.</th><th>Балл</th><th>Наруш.</th><th>Итог</th>' +
+            '<th>Сертификат</th>' +
+            '</tr></thead><tbody>';
+
+        data.slice().reverse().forEach(r => {
+            const date = new Date(r.timestamp).toLocaleString('ru-RU');
+            html += '<tr>' +
+                `<td>${date}</td>` +
+                `<td>${escapeHtml(r.fullname)}</td>` +
+                `<td>${escapeHtml(r.course)}</td>` +
+                `<td>${escapeHtml(r.group)}</td>` +
+                `<td>${r.correct}/${r.total}</td>` +
+                `<td>${r.rawPercent}%</td>` +
+                `<td>${r.violations}</td>` +
+                `<td>${r.finalPercent}%</td>` +
+                `<td>${r.certificateIssued ? '✓ ' + r.certificateId : '—'}</td>` +
+                '</tr>';
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, s => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[s]);
+    }
+
+    function exportCSV() {
+        const data = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || '[]');
+        if (data.length === 0) {
+            alert('Нет данных для экспорта.');
+            return;
+        }
+        const headers = ['Дата', 'ФИО', 'Курс', 'Группа', 'Правильных', 'Всего', 'Балл без штрафа (%)', 'Нарушений', 'Штраф (%)', 'Итоговый балл (%)', 'Сертификат', '№ сертификата', 'Время (сек)'];
+        const rows = data.map(r => [
+            new Date(r.timestamp).toLocaleString('ru-RU'),
+            r.fullname, r.course, r.group,
+            r.correct, r.total, r.rawPercent,
+            r.violations, r.penaltyPercent, r.finalPercent,
+            r.certificateIssued ? 'Да' : 'Нет',
+            r.certificateId || '',
+            r.timeSpentSeconds
+        ]);
+        const csv = [headers, ...rows]
+            .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
+            .join('\n');
+        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `biology_olympiad_2026_results_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function clearResults() {
+        if (!confirm('Удалить все сохранённые результаты с этого устройства? Действие необратимо.')) return;
+        localStorage.removeItem(CONFIG.STORAGE_KEY);
+        showAdminPanel();
+    }
+
+    // ============================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ============================================================
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('admin') === '1') {
+            showAdminPanel();
+        }
+    });
+
+    window.startTest = startTest;
+    window.endTest = endTest;
+    window.downloadCertificate = downloadCertificate;
+    window.exportCSV = exportCSV;
+    window.clearResults = clearResults;
+</script>
+</body>
+</html>
