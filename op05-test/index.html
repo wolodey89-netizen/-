@@ -55,9 +55,10 @@ button{border:0;border-radius:9px;padding:12px 20px;font-size:15px;font-weight:7
  <h1>Тест завершён</h1>
  <p id="resultName"></p>
  <div class="resultbox"><div class="muted">Ваш результат</div><div class="resultscore" id="score"></div><div id="scoreText"></div><p class="small muted" id="detailText"></p></div>
- <p>Для передачи результата преподавателю скачайте файл с итогами и отправьте его установленным способом.</p>
- <div class="resultactions"><button id="downloadBtn">Скачать результат</button><button class="secondary" onclick="window.print()">Печать</button><button class="secondary" id="restartBtn">Новая попытка</button></div>
- <p class="warningtext">Ответы и персональные данные никуда автоматически не отправляются. Результат формируется в браузере на этом устройстве.</p>
+ <p>После завершения тест автоматически отправит сводный результат в журнал преподавателя. Если отправка не сработает, можно повторить её или скачать файл с итогами.</p>
+ <p id="sheetStatus" class="small muted" role="status">Ожидание отправки результата…</p>
+ <div class="resultactions"><button id="downloadBtn">Скачать результат</button><button class="secondary" id="sendAgainBtn">Повторить отправку</button><button class="secondary" onclick="window.print()">Печать</button><button class="secondary" id="restartBtn">Новая попытка</button></div>
+ <p class="warningtext">В Google Таблицу передаются только имя, группа, итоговый балл, число отвеченных вопросов, число зафиксированных переключений и время выполнения. Ответы на отдельные вопросы не передаются.</p>
 </section>
 </div>
 <script>
@@ -65,6 +66,7 @@ const QUESTION_BANK = [{"id":1,"topic":"ИИ и проверка результ�
 const DURATION_SECONDS = 45 * 60;
 const MAX_FOCUS_VIOLATIONS = 3;
 const STORAGE_KEY = 'op05_test_attempt_v1';
+const GOOGLE_SCRIPT_URL = ''; // Добавим URL веб-приложения Apps Script после его развёртывания.
 const $ = id => document.getElementById(id);
 let attempt = null;
 let tickHandle = null;
@@ -78,7 +80,8 @@ function shuffle(list){
 }
 function makeAttempt(name, group){
  const questions=shuffle(QUESTION_BANK).map(q=>({id:q.id, optionOrder:shuffle(q.opts.map(o=>o[0]))}));
- return {name,group,startedAt:Date.now(),expiresAt:Date.now()+DURATION_SECONDS*1000,questions,answers:{},currentIndex:0,violations:0,completed:false,completedAt:null};
+ const attemptId = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : ('OP05_' + Date.now() + '_' + Math.random().toString(36).slice(2,10));
+ return {attemptId,name,group,startedAt:Date.now(),expiresAt:Date.now()+DURATION_SECONDS*1000,questions,answers:{},currentIndex:0,violations:0,completed:false,completedAt:null};
 }
 function save(){try{attempt.currentIndex=currentIndex;sessionStorage.setItem(STORAGE_KEY,JSON.stringify(attempt));}catch(e){}}
 function load(){try{const raw=sessionStorage.getItem(STORAGE_KEY);return raw?JSON.parse(raw):null;}catch(e){return null;}}
@@ -134,6 +137,44 @@ function finishTest(reason='Тест отправлен'){
  $('score').textContent=`${res.correct} / ${res.total}`;
  $('scoreText').textContent=`${res.percent}% правильных ответов`;
  $('detailText').textContent=`Отвечено: ${res.answered} из ${res.total}. Зафиксировано уходов со страницы/потери фокуса: ${attempt.violations}. Причина завершения: ${reason}.`;
+ sendResultToSheet();
+}
+let resultSendInProgress = false;
+function sendResultToSheet(){
+ const status = $('sheetStatus');
+ if(!attempt || !attempt.completed || resultSendInProgress) return;
+ if(!GOOGLE_SCRIPT_URL || !/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(GOOGLE_SCRIPT_URL)){
+  status.textContent = 'Автоматическая отправка пока не настроена. После подключения Google Таблицы здесь появится статус.';
+  return;
+ }
+ resultSendInProgress = true;
+ status.textContent = 'Отправляем итог в журнал преподавателя…';
+ const res = calculate();
+ const payload = {
+  attemptId: attempt.attemptId,
+  studentName: attempt.name,
+  group: attempt.group,
+  correct: res.correct,
+  total: res.total,
+  answered: res.answered,
+  focusViolations: attempt.violations,
+  startedAt: new Date(attempt.startedAt).toISOString(),
+  finishedAt: new Date(attempt.completedAt).toISOString(),
+  elapsedSeconds: Math.max(0, Math.round((attempt.completedAt - attempt.startedAt) / 1000)),
+  finishReason: attempt.finishReason || 'Тест отправлен'
+ };
+ fetch(GOOGLE_SCRIPT_URL, {
+  method: 'POST',
+  mode: 'no-cors',
+  headers: {'Content-Type':'text/plain;charset=utf-8'},
+  body: JSON.stringify(payload)
+ }).then(() => {
+  status.textContent = 'Запрос на запись отправлен. Поскольку браузер не показывает ответ Apps Script в этом режиме, фактическое появление строки проверяется в Google Таблице.';
+ }).catch(error => {
+  status.textContent = 'Не удалось отправить запрос: ' + (error && error.message ? error.message : 'ошибка сети') + '. Нажмите «Повторить отправку» или скачайте результат.';
+ }).finally(() => {
+  resultSendInProgress = false;
+ });
 }
 function downloadResult(){
  const res=calculate();const lines=[
@@ -161,6 +202,7 @@ $('startBtn').addEventListener('click',startTest);
 $('prevBtn').addEventListener('click',()=>move(-1));$('nextBtn').addEventListener('click',()=>move(1));
 $('submitBtn').addEventListener('click',()=>{const left=attempt.questions.length-Object.keys(attempt.answers).length;if(left>0&&!confirm(`Осталось вопросов без ответа: ${left}. Завершить тест?`))return;finishTest('Тест отправлен обучающимся');});
 $('downloadBtn').addEventListener('click',downloadResult);
+$('sendAgainBtn').addEventListener('click',sendResultToSheet);
 $('restartBtn').addEventListener('click',()=>{if(!confirm('Начать новую попытку? Текущий результат останется в скачанном файле, если вы его сохранили.'))return;sessionStorage.removeItem(STORAGE_KEY);location.reload();});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')recordFocusViolation();else recordFocusReturn();});
 window.addEventListener('blur',recordFocusViolation);window.addEventListener('focus',recordFocusReturn);
